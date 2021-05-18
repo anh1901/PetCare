@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/size_config.dart';
 
-import '../main_screen.dart';
+import '../basic_screen.dart';
 import 'components/splash_body.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
       () => {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (BuildContext context) => MainScreen(),
+            builder: (BuildContext context) => BasicScreen(),
           ),
         ),
       },
