@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:petcare/screens/main_screen.dart';
+import 'package:petcare/screens/splash_screen/splash_screen.dart';
 
 import 'data/themes.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
       title: 'Pet Care - Ứng dụng chăm sóc thú cưng',
-      home: MainScreen(),
+      home: SplashScreen(),
     );
   }
 }
