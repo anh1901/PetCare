@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:petcare/screens/splash_screen/splash_screen.dart';
 
 import 'data/themes.dart';
@@ -14,10 +15,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
-      // supportedLocales: [
-      //   Locale('en', 'US'),
-      //   Locale('vi', 'VN'),
-      // ],
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('vi', 'VN'),
+      ],
       title: 'Pet Care - Ứng dụng chăm sóc thú cưng',
       home: SplashScreen(),
     );

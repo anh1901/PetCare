@@ -39,16 +39,29 @@ class _MainScreenState extends State<MainScreen> {
             duration: Duration(milliseconds: 200),
             curve: Curves.linear,
           );
-          setState(() {});
+          setState(() {
+            currentIndex = value;
+          });
         },
         items: [
-          TabItem(icon: Icons.home, title: 'Home'),
-          TabItem(icon: Icons.shopping_cart, title: 'Shopping'),
-          TabItem(icon: Icons.pets, title: 'Pets'),
-          TabItem(icon: Icons.notifications, title: 'News'),
-          TabItem(icon: Icons.perm_identity, title: 'Profile'),
+          TabItem(
+              icon: Icons.home_outlined, title: 'Home', activeIcon: Icons.home),
+          TabItem(
+              icon: Icons.shopping_cart_outlined,
+              title: 'Shopping',
+              activeIcon: Icons.shopping_cart),
+          TabItem(
+              icon: Icons.pets_outlined, title: 'Pets', activeIcon: Icons.pets),
+          TabItem(
+              icon: Icons.notifications_outlined,
+              title: 'News',
+              activeIcon: Icons.notifications),
+          TabItem(
+              icon: Icons.perm_identity_outlined,
+              title: 'Profile',
+              activeIcon: Icons.perm_identity),
         ],
-        initialActiveIndex: 2,
+        initialActiveIndex: currentIndex,
       ),
       body: DoubleBackToCloseApp(
         child: PageView(

@@ -1,5 +1,6 @@
 import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'aboutus_screen/Aboutus_screen.dart';
 import 'main_screen.dart';
@@ -63,7 +64,7 @@ class BasicScreen extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 40),
               ),
               Text(
-                "Settings",
+                AppLocalizations.of(context).settings,
                 style: TextStyle(
                   color: Colors.white,
                 ),
