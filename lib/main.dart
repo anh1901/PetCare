@@ -14,6 +14,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
+      // supportedLocales: [
+      //   Locale('en', 'US'),
+      //   Locale('vi', 'VN'),
+      // ],
       title: 'Pet Care - Ứng dụng chăm sóc thú cưng',
       home: SplashScreen(),
     );

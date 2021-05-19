@@ -38,6 +38,8 @@ dependencies:
   flutter_cupertino_date_picker: ^1.0.26+2
   date_field: ^0.1.2
   animated_drawer: ^0.0.4
+  double_back_to_close_app: ^2.0.1
+  convex_bottom_bar: ^3.0.0
 
 dev_dependencies:
   flutter_test:

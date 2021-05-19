@@ -1,3 +1,5 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:petcare/widgets/child_widget.dart';
 
@@ -25,10 +27,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.grey[500],
-        currentIndex: currentIndex,
+      bottomNavigationBar: ConvexAppBar(
+        style: TabStyle.fixedCircle,
+        color: Colors.white70,
+        backgroundColor: Colors.blueAccent,
+        height: 62,
         onTap: (value) {
           currentIndex = value;
           _pageController.animateToPage(
@@ -39,37 +42,36 @@ class _MainScreenState extends State<MainScreen> {
           setState(() {});
         },
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            title: Text("Home"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            title: Text("Shopping"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pets),
-            title: Text("Pets"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.perm_identity_outlined),
-            title: Text("Profile"),
-          ),
+          TabItem(icon: Icons.home, title: 'Home'),
+          TabItem(icon: Icons.shopping_cart, title: 'Shopping'),
+          TabItem(icon: Icons.pets, title: 'Pets'),
+          TabItem(icon: Icons.notifications, title: 'News'),
+          TabItem(icon: Icons.perm_identity, title: 'Profile'),
         ],
+        initialActiveIndex: 2,
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (page) {
-          setState(() {
-            currentIndex = page;
-          });
-        },
-        children: <Widget>[
-          ChildWidget(menu: AvailableMenu.Home),
-          ChildWidget(menu: AvailableMenu.Shopping),
-          ChildWidget(menu: AvailableMenu.Pets),
-          ChildWidget(menu: AvailableMenu.Profile),
-        ],
+      body: DoubleBackToCloseApp(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (page) {
+            setState(() {
+              currentIndex = page;
+            });
+          },
+          children: <Widget>[
+            ChildWidget(menu: AvailableMenu.Home),
+            ChildWidget(menu: AvailableMenu.Shopping),
+            ChildWidget(menu: AvailableMenu.Pets),
+            ChildWidget(menu: AvailableMenu.Notifications),
+            ChildWidget(menu: AvailableMenu.Profile),
+          ],
+        ),
+        snackBar: SnackBar(
+          content: SizedBox(child: Text('Tap back again to leave')),
+          backgroundColor: Colors.black26,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(bottom: 70, left: 10.0, right: 10.0),
+        ),
       ),
     );
   }

@@ -1,14 +1,12 @@
 import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:flutter/material.dart';
 
+import 'aboutus_screen/Aboutus_screen.dart';
 import 'main_screen.dart';
 
-class BasicScreen extends StatefulWidget {
-  @override
-  _BasicScreenState createState() => _BasicScreenState();
-}
+class BasicScreen extends StatelessWidget {
+  const BasicScreen({Key key}) : super(key: key);
 
-class _BasicScreenState extends State<BasicScreen> {
   @override
   Widget build(BuildContext context) {
     return AnimatedDrawer(
@@ -20,7 +18,10 @@ class _BasicScreenState extends State<BasicScreen> {
       shadowYValue: 110,
       shadowAngle: -0.275,
       shadowSpeed: 550,
-      openIcon: Icon(Icons.menu_open, color: Color(0xFF1f186f)),
+      openIcon: Icon(
+        Icons.menu_open,
+        color: Color(0xFF1f186f),
+      ),
       closeIcon: Icon(Icons.arrow_back_ios, color: Color(0xFF1f186f)),
       shadowColor: Color(0xff6c5fbf),
       backgroundGradient: LinearGradient(
@@ -62,15 +63,6 @@ class _BasicScreenState extends State<BasicScreen> {
                 padding: EdgeInsets.only(bottom: 40),
               ),
               Text(
-                "Home",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 20),
-              ),
-              Text(
                 "Settings",
                 style: TextStyle(
                   color: Colors.white,
@@ -86,10 +78,18 @@ class _BasicScreenState extends State<BasicScreen> {
               Padding(
                 padding: EdgeInsets.only(bottom: 20),
               ),
-              Text(
-                "About",
-                style: TextStyle(
-                  color: Colors.white,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutUsScreen()),
+                  );
+                },
+                child: Text(
+                  "About",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
