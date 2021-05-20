@@ -1,4 +1,3 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:petcare/widgets/child_widget.dart';
@@ -27,11 +26,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: ConvexAppBar(
-        style: TabStyle.fixedCircle,
-        color: Colors.white70,
-        backgroundColor: Colors.blueAccent,
-        height: 62,
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Colors.grey[500],
+        currentIndex: currentIndex,
         onTap: (value) {
           currentIndex = value;
           _pageController.animateToPage(
@@ -39,29 +37,30 @@ class _MainScreenState extends State<MainScreen> {
             duration: Duration(milliseconds: 200),
             curve: Curves.linear,
           );
-          setState(() {
-            currentIndex = value;
-          });
+          setState(() {});
         },
         items: [
-          TabItem(
-              icon: Icons.home_outlined, title: 'Home', activeIcon: Icons.home),
-          TabItem(
-              icon: Icons.shopping_cart_outlined,
-              title: 'Shopping',
-              activeIcon: Icons.shopping_cart),
-          TabItem(
-              icon: Icons.pets_outlined, title: 'Pets', activeIcon: Icons.pets),
-          TabItem(
-              icon: Icons.notifications_outlined,
-              title: 'News',
-              activeIcon: Icons.notifications),
-          TabItem(
-              icon: Icons.perm_identity_outlined,
-              title: 'Profile',
-              activeIcon: Icons.perm_identity),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: "Shopping",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pets),
+            label: "Pets",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: "Events",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.perm_identity_outlined),
+            label: "Profile",
+          ),
         ],
-        initialActiveIndex: currentIndex,
       ),
       body: DoubleBackToCloseApp(
         child: PageView(
