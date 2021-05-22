@@ -11,7 +11,7 @@ class AboutUsScreen extends StatelessWidget {
       appBar: AppBar(
         title: CustomText(
           text: 'About us',
-          color: black,
+          color: ColorStyles.black,
           fontWeight: FontWeight.bold,
           size: 20,
         ),

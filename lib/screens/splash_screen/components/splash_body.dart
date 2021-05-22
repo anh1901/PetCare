@@ -18,7 +18,7 @@ class SplashBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
-                flex: 2,
+                flex: 1,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -28,7 +28,7 @@ class SplashBody extends StatelessWidget {
                       height: 80,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 15),
+                      padding: EdgeInsets.only(top: 10),
                     ),
                     CustomText(
                       text: 'Get your pet the best care',
@@ -46,14 +46,14 @@ class SplashBody extends StatelessWidget {
                   children: <Widget>[
                     CircularProgressIndicator(),
                     Padding(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: 10),
                     ),
                     FutureBuilder(
                       future: loadFact(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return new Container(
-                              padding: new EdgeInsets.all(8.0),
+                              padding: new EdgeInsets.all(5.0),
                               child: new Row(
                                 children: <Widget>[
                                   Container(

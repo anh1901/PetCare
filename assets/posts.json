@@ -1,0 +1,23 @@
+{
+  "posts": [
+    {
+       "userId": "1",
+       "messageType": "",
+       "messageInfo": "",
+       "noComment": "",
+       "noLike": "",
+       "noRead": "",
+       "fileCount": "",
+       "followStatus": "",
+       "isSelf": "",
+       "agreeStatus": "",
+       "createTime": "",
+       "time": "",
+       "fileList": "",
+       "userInfo": "",
+       "messageLabel": "",
+      "atUsers": "",
+      "commentList": ""
+    },
+  ]
+}

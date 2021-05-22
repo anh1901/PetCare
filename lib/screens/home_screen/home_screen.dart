@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:petcare/widgets/app_size.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/custom_text.dart';
 
-class HomeScreen extends StatefulWidget {
-  // static navigate() {
-  //   navigatorKey.currentState.pushReplacement(pageBuilder(HomeScreen()));
-  // }
+import 'components/home_title.dart';
+import 'components/posts_screen.dart';
 
+class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,63 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 45.0, top: 0.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        "PET",
-                        style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "CARE",
-                        style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.blue[200],
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(icon: Icon(Icons.search), onPressed: () {}),
-                    Stack(
-                      children: <Widget>[
-                        IconButton(
-                            icon: Icon(Icons.notifications_none),
-                            onPressed: () {}),
-                        Positioned(
-                          top: 12,
-                          right: 12,
-                          child: Container(
-                            height: 10,
-                            width: 10,
-                            decoration: BoxDecoration(
-                              color: green,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-            Divider(
-              color: Colors.white10,
-              thickness: 2,
+              children: title,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(4.0),
+                  padding: const EdgeInsets.only(left: 10.0, right: 10),
                   child: GestureDetector(
                     // onTap: () {
                     //   Navigator.push(
@@ -111,12 +62,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CustomText(
                         text: "Lets share some thing...",
                         size: 18,
-                        color: grey,
+                        color: ColorStyles.black,
                       ),
                     ),
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: SizeFit.screenHeight * 0.77,
+              child: PostScreen(),
             ),
           ],
         ),

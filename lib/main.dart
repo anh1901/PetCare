@@ -1,29 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:petcare/screens/splash_screen/splash_screen.dart';
+import 'package:petcare/redux_app.dart';
+import 'package:petcare/widgets/app_size.dart';
 
-import 'data/themes.dart';
+import 'caches/shared_storage.dart';
+import 'config/device_info.dart';
+import 'widgets/toast.dart';
 
 void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SharedStorage.initStorage().then((value) {
+    runApp(MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
+    Toast.setToastStyle();
+  }).catchError((error) {
+    print(error);
+  });
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: lightTheme,
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-      ],
-      supportedLocales: [
-        Locale('en', 'US'),
-        Locale('vi', 'VN'),
-      ],
-      title: 'Pet Care - Ứng dụng chăm sóc thú cưng',
-      home: SplashScreen(),
-    );
+    SizeFit.initialize();
+    DeviceInfo.initialezed();
+    return ReduxApp();
+    // return MaterialApp(
+    //   theme: lightTheme,
+    //   debugShowCheckedModeBanner: false,
+    //   localizationsDelegates: [
+    //     AppLocalizations.delegate,
+    //     GlobalMaterialLocalizations.delegate,
+    //     GlobalWidgetsLocalizations.delegate,
+    //     GlobalCupertinoLocalizations.delegate,
+    //   ],
+    //   supportedLocales: [
+    //     Locale('en', 'US'),
+    //     Locale('vi', 'VN'),
+    //   ],
+    //   //locale: Locale('en', 'US'),
+    //   locale: Locale('vi', 'VN'),
+    //   title: 'Pet Care - Ứng dụng chăm sóc thú cưng',
+    //   home: SplashScreen(),
+    // );
   }
 }
