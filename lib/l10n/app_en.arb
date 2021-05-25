@@ -7,6 +7,8 @@
   "home_page":"What's new?",
   "friend_page":"Friend",
   "recommend_page":"Recommended",
+  "profile":"Account",
+  "language":"Language",
   "pet_select": "Choose pet",
   "pet_add": "Add pet",
   "pet_add_no": "No pet added",

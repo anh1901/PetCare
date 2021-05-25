@@ -21,9 +21,9 @@ class _ReduxAppState extends State<ReduxApp> with NavigatorObserver {
     middleware: middleware,
     initialState: ReduxState(
       themeData: FunctionUtils.getThemeData(0),
-      locale: Locale('vi', 'VN'),
+      locale: Locale('en', 'EN'),
       isNightModal: false,
-      isLogin: false,
+      isLogin: FunctionUtils.isLogin(),
     ),
   );
 
@@ -60,7 +60,6 @@ class _ReduxAppState extends State<ReduxApp> with NavigatorObserver {
               ],
               initialRoute:
                   isWelcome ? RouteUtil.splashRoute : RouteUtil.welcomeRoute,
-              onGenerateRoute: RouteUtil.generateRoute,
               onUnknownRoute: RouteUtil.unknownRoute,
               routes: routes,
               debugShowCheckedModeBanner: false,

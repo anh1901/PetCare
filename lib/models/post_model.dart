@@ -1,13 +1,24 @@
-import 'dart:convert';
+// PostModel postModelFromJson(String str) => PostModel.fromJson(json.decode(str));
+//
+// String postModelToJson(PostModel data) => json.encode(data.toJson());
 
 import 'comment_model.dart';
 
-PostModel postModelFromJson(String str) => PostModel.fromJson(json.decode(str));
-
-String postModelToJson(PostModel data) => json.encode(data.toJson());
+class PostList {
+  List<PostModel> postList;
+  PostList({this.postList});
+  factory PostList.fromJson(Map<String, dynamic> parsedJson) {
+    var list = parsedJson['posts'] as List;
+    List<PostModel> postList = list.map((i) => PostModel.fromJson(i)).toList();
+    print(postList);
+    return new PostList(
+      postList: postList,
+    );
+  }
+}
 
 class PostModel {
-  int messageId;
+  int postId;
   int userId;
   String messageType;
   String messageInfo;
@@ -15,18 +26,18 @@ class PostModel {
   int noLike;
   int noRead;
   int fileCount;
+  String location;
   String followStatus;
   String isSelf;
-  String agreeStatus;
+  String likeStatus;
   String createTime;
   String time;
   List<FileList> fileList;
-  FindUserInfo userInfo;
-  MessageLabel messageLabel;
-  List<dynamic> atUsers;
+  UserInfo userInfo;
+  TagLabel tagLabel;
   List<CommentModel> commentList;
   PostModel({
-    this.messageId,
+    this.postId,
     this.userId,
     this.messageType,
     this.messageInfo,
@@ -36,60 +47,68 @@ class PostModel {
     this.fileCount,
     this.followStatus,
     this.isSelf,
-    this.agreeStatus,
+    this.likeStatus,
     this.createTime,
     this.time,
     this.fileList,
     this.userInfo,
-    this.messageLabel,
-    this.atUsers,
+    this.location,
+    this.tagLabel,
     this.commentList,
   });
-  factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
-        messageId: json["messageId"],
-        userId: json["userId"],
-        messageType: json["messageType"],
-        messageInfo: json["messageInfo"],
-        noComment: json["noComment"],
-        noLike: json["noLike"],
-        noRead: json["noRead"],
-        fileCount: json["fileCount"],
-        followStatus: json["followStatus"],
-        isSelf: json["isSelf"],
-        agreeStatus: json["agreeStatus"],
-        createTime: json["createTime"],
-        time: json["time"],
-        fileList: List<FileList>.from(
-            json["fileList"].map((x) => FileList.fromJson(x))),
-        userInfo: FindUserInfo.fromJson(json["userInfo"]),
-        messageLabel: MessageLabel.fromJson(json["messageLabel"] ?? {}),
-        atUsers: List<dynamic>.from(json["atUsers"].map((x) => x)),
-        commentList: List<CommentModel>.from(
-            json["commentList"].map((x) => CommentModel.fromJson(x))),
-      );
+  factory PostModel.fromJson(Map<String, dynamic> json) {
+    return new PostModel(
+      postId: json["postId"],
+      userId: json["userId"],
+      messageType: json["messageType"],
+      messageInfo: json["messageInfo"],
+      noComment: json["noComment"],
+      noLike: json["noLike"],
+      noRead: json["noRead"],
+      fileCount: json["fileCount"],
+      followStatus: json["followStatus"],
+      isSelf: json["isSelf"],
+      likeStatus: json["likeStatus"],
+      createTime: json["createTime"],
+      time: json["time"],
+      location: json["location"],
+      fileList: List<FileList>.from(
+          json["fileList"].map((x) => FileList.fromJson(x))),
+      userInfo: UserInfo.fromJson(json["userInfo"]),
+      tagLabel: TagLabel.fromJson(json["tagLabel"] ?? {}),
+      commentList: List<CommentModel>.from(
+          json["commentList"].map((x) => CommentModel.fromJson(x))),
+    );
+  }
+
   Map<String, dynamic> toJson() => {
-        "messageId": messageId,
+        "postId": postId,
         "userId": userId,
         "messageType": messageType,
         "messageInfo": messageInfo,
-        "cntComment": noComment,
-        "cntAgree": noLike,
-        "cntRead": noRead,
+        "noComment": noComment,
+        "noLike": noLike,
+        "noRead": noRead,
         "fileCount": fileCount,
         "followStatus": followStatus,
         "isSelf": isSelf,
-        "agreeStatus": agreeStatus,
+        "likeStatus": likeStatus,
         "createTime": createTime,
         "time": time,
+        "location": location,
         "fileList": List<dynamic>.from(fileList.map((x) => x.toJson())),
         "userInfo": userInfo.toJson(),
-        "messageLabel": messageLabel.toJson(),
-        "atUsers": List<dynamic>.from(atUsers.map((x) => x)),
+        "tagLabel": tagLabel.toJson(),
         "commentList": List<dynamic>.from(commentList.map((x) => x.toJson())),
       };
 }
 
 class FileList {
+  int fileId;
+  String fileUrl;
+  String fileType;
+  int height;
+  int width;
   FileList({
     this.fileId,
     this.fileUrl,
@@ -97,12 +116,6 @@ class FileList {
     this.height,
     this.width,
   });
-
-  int fileId;
-  String fileUrl;
-  String fileType;
-  String height;
-  String width;
 
   factory FileList.fromJson(Map<String, dynamic> json) => FileList(
         fileId: json["fileId"],
@@ -121,33 +134,32 @@ class FileList {
       };
 }
 
-class MessageLabel {
-  MessageLabel({
-    this.labelId,
-    this.labelName,
+class TagLabel {
+  int tagId;
+  String tagName;
+
+  TagLabel({
+    this.tagId,
+    this.tagName,
   });
-
-  int labelId;
-  String labelName;
-
-  factory MessageLabel.fromJson(Map<String, dynamic> json) => MessageLabel(
-        labelId: json["labelId"] ?? 0,
-        labelName: json["labelName"] ?? '',
+  factory TagLabel.fromJson(Map<String, dynamic> json) => TagLabel(
+        tagId: json["tagId"] ?? 0,
+        tagName: json["tagName"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
-        "labelId": labelId,
-        "labelName": labelName,
+        "tagId": tagId,
+        "tagName": tagName,
       };
 }
 
-class FindUserInfo {
+class UserInfo {
   int userId;
   String avatarImg;
   String nickname;
   String city;
-  FindUserInfo({this.userId, this.avatarImg, this.nickname, this.city});
-  factory FindUserInfo.fromJson(Map<String, dynamic> json) => FindUserInfo(
+  UserInfo({this.userId, this.avatarImg, this.nickname, this.city});
+  factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
         userId: json["userId"],
         avatarImg: json["avatarImg"],
         nickname: json["nickname"],

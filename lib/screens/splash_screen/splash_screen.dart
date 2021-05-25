@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:petcare/caches/shared_storage.dart';
+import 'package:petcare/screens/login_screen/login_screen.dart';
+import 'package:petcare/utils/function_util.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/size_config.dart';
 
@@ -22,7 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
       () => {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (BuildContext context) => BasicScreen(),
+            builder: (BuildContext context) =>
+                SharedStorage.showLogin ? BasicScreen() : LoginScreen(),
           ),
         ),
       },

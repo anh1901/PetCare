@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen>
               ],
             ),
             SizedBox(
-              height: SizeFit.screenHeight * 0.77,
+              height: SizeFit.screenHeight * 0.8,
               child: PostScreen(),
             ),
           ],

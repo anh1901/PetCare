@@ -76,9 +76,8 @@ class LoginMiddleware implements MiddlewareClass<ReduxState> {
           .then((value) {});
 */
       RouteUtil.popToRoutePage(action.context);
-      Toast.showSuccess('Success');
+      Toast.showSuccess('Login Success');
     }
-    // Make sure to forward actions to the next middleware in the chain!
     next(action);
   }
 }

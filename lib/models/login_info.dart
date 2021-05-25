@@ -1,10 +1,12 @@
 import 'dart:convert';
 
-UserInfo userInfoFromJson(String str) => UserInfo.fromJson(json.decode(str));
+LoginInfo loginInfoFromJson(String str) => LoginInfo.fromJson(json.decode(str));
 
-String userInfoToJson(UserInfo data) => json.encode(data.toJson());
+String loginInfoToJson(LoginInfo data) => json.encode(data.toJson());
 
-class UserInfo {
+class LoginInfo {
+  int lastUserId = 0;
+
   int id;
   int userDataId;
   String username;
@@ -15,9 +17,7 @@ class UserInfo {
   String sex;
   String intro;
   String city;
-  DateTime createTime;
-  DateTime modifyTime;
-  UserInfo({
+  LoginInfo({
     this.id,
     this.userDataId,
     this.username,
@@ -28,11 +28,10 @@ class UserInfo {
     this.sex,
     this.intro,
     this.city,
-    this.createTime,
-    this.modifyTime,
   });
-  factory UserInfo.fromJson(Map<String, dynamic> json) {
-    return UserInfo(
+
+  factory LoginInfo.fromJson(Map<String, dynamic> json) {
+    return LoginInfo(
       id: json["id"],
       userDataId: json["userDataId"],
       username: json["username"],
@@ -43,8 +42,6 @@ class UserInfo {
       sex: json["sex"] ?? '',
       intro: json["intro"] ?? '',
       city: json["city"] ?? '',
-      createTime: DateTime.parse(json["createTime"]),
-      modifyTime: DateTime.parse(json["modifyTime"]),
     );
   }
 
@@ -57,7 +54,5 @@ class UserInfo {
         "avatarUrl": avatarUrl,
         "nickname": nickname,
         "city": city,
-        "createTime": createTime?.toIso8601String(),
-        "modifyTime": modifyTime?.toIso8601String(),
       };
 }

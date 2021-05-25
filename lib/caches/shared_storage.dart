@@ -24,8 +24,10 @@ class SharedStorage {
 
   static int currentPetId = 0;
   static bool showWelcome = false;
+  static bool showLogin = false;
   static Future initStorage() async {
     showWelcome = await SharedUtils.getBool(SharedConstant.welcomePage);
+    showLogin = await SharedUtils.getBool(SharedConstant.isLogin);
   }
 
   static saveDeviceInfo() {
@@ -108,6 +110,10 @@ class SharedStorage {
 
   static saveShowWelcome() {
     SharedUtils.setBool(SharedConstant.welcomePage, true);
+  }
+
+  static saveLogin() {
+    SharedUtils.setBool(SharedConstant.isLogin, true);
   }
 
   static Future<DataResult> initUserInfo(Store store) async {

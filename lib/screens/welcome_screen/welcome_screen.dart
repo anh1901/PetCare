@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:petcare/caches/shared_storage.dart';
 import 'package:petcare/redux/redux_state.dart';
+import 'package:petcare/screens/login_screen/login_screen.dart';
 import 'package:petcare/utils/function_util.dart';
 import 'package:petcare/utils/route_util.dart';
 import 'package:petcare/widgets/image_path.dart';
+import 'package:petcare/widgets/size_config.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static final String routerName = 'welcome';
@@ -25,6 +27,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return StoreBuilder<ReduxState>(
       builder: (context, store) {
         return Material(
@@ -43,9 +46,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       SharedStorage.initUserInfo(store).then(
                         (result) {
                           if (FunctionUtils.isLogin()) {
-                            //
+                            RouteUtil.pushMainRoot(context);
                           }
-                          RouteUtil.pushMainRoot(context);
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => LoginScreen(),
+                            ),
+                          );
                         },
                       );
                     }

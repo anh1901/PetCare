@@ -4,7 +4,6 @@ class FactList {
   factory FactList.fromJson(Map<String, dynamic> parsedJson) {
     var list = parsedJson['facts'] as List;
     List<Fact> factList = list.map((i) => Fact.fromJson(i)).toList();
-
     return new FactList(
       factList: factList,
     );
