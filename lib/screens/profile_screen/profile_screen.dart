@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:petcare/caches/shared_constant.dart';
 import 'package:petcare/caches/shared_util.dart';
-import 'package:petcare/main.dart';
 import 'package:petcare/models/post_model.dart';
 import 'package:petcare/models/user_data_model.dart';
 import 'package:petcare/redux/action/user_action.dart';
@@ -18,6 +17,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../main.dart';
 import 'components/detail_page.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -350,17 +350,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
         titleList: titles,
         isNight: store.state.isNightModal,
         onTap: (index) {
-          print("Press$index");
           FunctionUtils.changeLocale(store, index);
           SharedUtils.setInt(SharedConstant.localIndex, index);
         });
   }
 
   void showLogoutDialog(BuildContext context, Store store) {
-    FunctionUtils.logOutAction(context);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => MyApp()),
+    showAlertDialog(context);
+  }
+
+  showAlertDialog(context) {
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('AlertDialog');
+      },
     );
+    Widget logoutButton = FlatButton(
+      child: Text("Logout"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('AlertDialog');
+        FunctionUtils.logOutAction(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
+      },
+    );
+    AlertDialog alert = AlertDialog(
+      title: Text("Are you sure you want to logout"),
+      content: Text(
+          "Click logout if you want to logout. You will be redirected to login screen."),
+      actions: [cancelButton, logoutButton],
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 }
