@@ -43,51 +43,19 @@ class FunctionUtils {
     LoginInfo loginInfo = userModel.loginInfo;
     loginInfo.userId = 0;
     userModel.loginInfo = loginInfo;
-
     PetViewModel petVM = Provider.of<PetViewModel>(context, listen: false);
     petVM.petList = [];
-
     Toast.showSuccess('Success!');
     RouteUtil.popRoot(context);
   }
 
-  static void loginOutAction(BuildContext context) {
+  static void logOutAction(BuildContext context) {
     Store<ReduxState> store = StoreProvider.of(context);
-
     store.dispatch(LogoutAction(context));
     store.dispatch(LoginStatusAction(false));
     store.dispatch(UpdatePetList([]));
     store.dispatch(UpdateCurrentPet(PetModel()));
-
     Toast.showSuccess('Success!');
-    RouteUtil.popRoot(context);
-  }
-
-  static String formatPhone(account) {
-    String phoneStr = account.toString().replaceAll(' ', '');
-    if (phoneStr.length > 7 && phoneStr.length <= 11) {
-      phoneStr = phoneStr.substring(0, 7) + ' ' + phoneStr.substring(7);
-      phoneStr = phoneStr.substring(0, 3) + ' ' + phoneStr.substring(3);
-    }
-    if (phoneStr.length > 3 && phoneStr.length < 8) {
-      phoneStr = phoneStr.substring(0, 3) + ' ' + phoneStr.substring(3);
-    }
-    return phoneStr;
-  }
-
-  static String getPhone(account) {
-    return account.toString().replaceAll(' ', '');
-  }
-
-  static bool isPhoneNumber(account) {
-    final isVietNamMobile = new RegExp(r'^(09|01[2|6|8|9])+([0-9]{8})\b');
-
-    final isOtherTelphone = new RegExp(r'^(170\\d{8}$)');
-
-    if (isVietNamMobile.hasMatch(account)) {
-      return true;
-    }
-    return isOtherTelphone.hasMatch(account);
   }
 
   static setThemeData(Store store, int index) {

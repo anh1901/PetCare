@@ -3,12 +3,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:petcare/caches/shared_constant.dart';
 import 'package:petcare/caches/shared_util.dart';
+import 'package:petcare/main.dart';
 import 'package:petcare/models/post_model.dart';
 import 'package:petcare/models/user_data_model.dart';
 import 'package:petcare/redux/action/user_action.dart';
 import 'package:petcare/redux/models/pet_model.dart';
 import 'package:petcare/redux/redux_state.dart';
-import 'package:petcare/screens/profile_screen/setting_page/profile_detail.dart';
 import 'package:petcare/utils/function_util.dart';
 import 'package:petcare/utils/route_util.dart';
 import 'package:petcare/widgets/action_alert.dart';
@@ -17,6 +17,8 @@ import 'package:petcare/widgets/commons.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
 import 'package:sizer/sizer.dart';
+
+import 'components/detail_page.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key key}) : super(key: key);
@@ -150,10 +152,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             onTap: () {
               if (isLogin) {
-                RouteUtil.push(context, SettingPage());
+                RouteUtil.push(context, DetailPage());
               } else {
                 // FunctionUtils.jumpLogin(context);
-                RouteUtil.push(context, SettingPage());
+                RouteUtil.push(context, DetailPage());
               }
             },
           )
@@ -261,7 +263,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget renderProfileList(BuildContext context, Store store) {
     final titles = [
+      "Change theme",
       AppLocalizations.of(context).language,
+      "Edit Profile",
+      "Order",
+      "Shipping Address",
+      "My credit card",
+      "Review this app",
+      "About us",
+      "Logout"
     ];
     return SliverToBoxAdapter(
       child: Container(
@@ -299,7 +309,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               onTap: () {
                 if (index == 0) {
+                  //
+                }
+                if (index == 1) {
                   showLocalDialog(context, store);
+                }
+                if (index == 2) {
+                  //
+                }
+                if (index == 3) {
+                  //
+                }
+                if (index == 4) {
+                  //
+                }
+                if (index == 4) {
+                  //
+                }
+                if (index == 6) {
+                  //
+                }
+                if (index == 7) {
+                  //
+                }
+                if (index == 8) {
+                  showLogoutDialog(context, store);
                 }
               },
             );
@@ -316,8 +350,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         titleList: titles,
         isNight: store.state.isNightModal,
         onTap: (index) {
+          print("Press$index");
           FunctionUtils.changeLocale(store, index);
           SharedUtils.setInt(SharedConstant.localIndex, index);
         });
+  }
+
+  void showLogoutDialog(BuildContext context, Store store) {
+    FunctionUtils.logOutAction(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MyApp()),
+    );
   }
 }

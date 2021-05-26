@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcare/screens/login_screen/login_screen.dart';
 import 'package:petcare/screens/splash_screen/splash_screen.dart';
 import 'package:petcare/screens/welcome_screen/welcome_screen.dart';
 
@@ -9,10 +10,7 @@ class RouteUtil {
   static final Map<String, WidgetBuilder> routeList = {
     WelcomeScreen.routerName: (ctx) => WelcomeScreen(),
     SplashScreen.routerName: (ctx) => SplashScreen(),
-    // MainPage.routerName: (ctx) => MainPage(),
-    // LoginPage.routeName: (ctx) => LoginPage(),
-    // RegisterPage.routeName: (ctx) => RegisterPage(),
-    // PasswordPage.routeName: (ctx) => PasswordPage(),
+    LoginScreen.routerName: (ctx) => LoginScreen(),
   };
 
   static final RouteFactory generateRoute = (setting) {

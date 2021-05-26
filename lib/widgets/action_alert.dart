@@ -110,7 +110,6 @@ class ActionAlert {
                     child: Text(titleArray[index],
                         style: TextStyle(fontSize: 14, color: textColor)),
                     onPressed: () {
-                      //Navigator.of(context).pop();
                       onTap(index);
                     },
                   );
@@ -150,8 +149,8 @@ class _CupertinoAlert extends StatelessWidget {
       {@required BuildContext context,
       this.title = '',
       this.message = '',
-      this.leftTitle = '取消',
-      this.rightTitle = '确认',
+      this.leftTitle = 'data',
+      this.rightTitle = 'data',
       this.leftPressed,
       this.rightPressed});
 
@@ -166,7 +165,11 @@ class _CupertinoAlert extends StatelessWidget {
       content: Container(
         padding: EdgeInsets.only(top: 8),
         child: Text(message ?? '',
-            style: TextStyle(fontSize: 15, color: ColorStyles.color_333333)),
+            style: TextStyle(
+              fontSize: 16,
+              color: ColorStyles.color_333333,
+              fontWeight: FontWeight.bold,
+            )),
       ),
       actions: renderActions(context),
     );
@@ -177,7 +180,7 @@ class _CupertinoAlert extends StatelessWidget {
 
     Widget leftItem = CupertinoDialogAction(
       textStyle: TextStyle(fontSize: 16, color: ColorStyles.color_999999),
-      child: Text(leftTitle ?? '取消'),
+      child: Text(leftTitle ?? 'data'),
       onPressed: () {
         Navigator.of(context).pop();
         if (leftPressed != null) {
@@ -217,8 +220,8 @@ class _MaterialAlert extends StatelessWidget {
       {@required BuildContext context,
       this.title = '',
       this.message = '',
-      this.leftTitle = '取消',
-      this.rightTitle = '确认',
+      this.leftTitle = 'Cancel',
+      this.rightTitle = 'Ok',
       this.leftPressed,
       this.rightPressed});
 
@@ -243,7 +246,7 @@ class _MaterialAlert extends StatelessWidget {
     List<Widget> itemList = [];
 
     Widget leftItem = FlatButton(
-      child: Text(leftTitle ?? '取消',
+      child: Text(leftTitle ?? 'Cancel',
           style: TextStyle(fontSize: 16, color: ColorStyles.color_999999)),
       onPressed: () {
         Navigator.of(context).pop();

@@ -112,6 +112,10 @@ class SharedStorage {
     SharedUtils.setBool(SharedConstant.welcomePage, true);
   }
 
+  static unSaveLoginStatus() {
+    SharedUtils.setBool(SharedConstant.isLogin, false);
+  }
+
   static saveLogin() {
     SharedUtils.setBool(SharedConstant.isLogin, true);
   }
