@@ -1,14 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:petcare/redux_app.dart';
+import 'package:petcare/services/authentication_service.dart';
+import 'package:petcare/utils/orientation_util.dart';
 import 'package:petcare/widgets/app_size.dart';
+import 'package:provider/provider.dart';
 
 import 'caches/shared_storage.dart';
 import 'config/device_info.dart';
 import 'widgets/toast.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   SharedStorage.initStorage().then((value) {
     runApp(MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
     Toast.setToastStyle();
@@ -17,29 +21,37 @@ void main() {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget with PortraitModeMixin {
+  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     SizeFit.initialize();
     DeviceInfo.initialezed();
-    return ReduxApp();
-    // return MaterialApp(
-    //   theme: lightTheme,
-    //   debugShowCheckedModeBanner: false,
-    //   localizationsDelegates: [
-    //     AppLocalizations.delegate,
-    //     GlobalMaterialLocalizations.delegate,
-    //     GlobalWidgetsLocalizations.delegate,
-    //     GlobalCupertinoLocalizations.delegate,
-    //   ],
-    //   supportedLocales: [
-    //     Locale('en', 'US'),
-    //     Locale('vi', 'VN'),
-    //   ],
-    //   //locale: Locale('en', 'US'),
-    //   locale: Locale('vi', 'VN'),
-    //   title: 'Pet Care - Ứng dụng chăm sóc thú cưng',
-    //   home: SplashScreen(),
-    // );
+    return MultiProvider(
+      providers: [
+        Provider<AuthenticationService>(
+            create: (_) => AuthenticationService(FirebaseAuth.instance)),
+        StreamProvider(
+          create: (context) =>
+              context.read<AuthenticationService>().authStateChanges,
+        ),
+      ],
+      child: FutureBuilder(
+        future: _fbApp,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print("${snapshot.error.toString()}");
+          } else if (snapshot.hasData) {
+            return ReduxApp();
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return null;
+        },
+      ),
+    );
   }
 }

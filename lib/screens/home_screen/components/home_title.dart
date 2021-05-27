@@ -9,12 +9,12 @@ final List<Widget> title = [
         Text(
           "PET",
           style: TextStyle(
-              fontSize: 17, color: Colors.grey, fontWeight: FontWeight.bold),
+              fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
         Text(
           "CARE",
           style: TextStyle(
-              fontSize: 17,
+              fontSize: 20,
               color: Colors.blue[200],
               fontWeight: FontWeight.bold),
         )

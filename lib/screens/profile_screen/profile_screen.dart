@@ -3,38 +3,27 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:petcare/caches/shared_constant.dart';
 import 'package:petcare/caches/shared_util.dart';
+import 'package:petcare/main.dart';
 import 'package:petcare/models/post_model.dart';
 import 'package:petcare/models/user_data_model.dart';
-import 'package:petcare/redux/action/user_action.dart';
 import 'package:petcare/redux/models/pet_model.dart';
 import 'package:petcare/redux/redux_state.dart';
+import 'package:petcare/services/authentication_service.dart';
 import 'package:petcare/utils/function_util.dart';
 import 'package:petcare/utils/route_util.dart';
 import 'package:petcare/widgets/action_alert.dart';
 import 'package:petcare/widgets/app_size.dart';
 import 'package:petcare/widgets/commons.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../main.dart';
 import 'components/detail_page.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key key}) : super(key: key);
-
-  @override
-  _ProfileScreenState createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreen extends StatelessWidget {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return StoreBuilder<ReduxState>(builder: (context, store) {
@@ -56,16 +45,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _refreshController.refreshCompleted();
                 return;
               }
-              FetchUserInfoAction.loadPetList(store);
-              FetchUserInfoAction.loadUserData(store).then((value) {
-                _refreshController.refreshCompleted();
-              }).catchError((e) {
-                _refreshController.refreshCompleted();
-              });
+              ;
             },
             child: CustomScrollView(
               slivers: [
-                renderHeaderItem(store),
+                renderHeaderItem(store, context),
                 renderAnimalTitle(store),
                 renderAnimalList(store),
                 renderProfileList(context, store)
@@ -77,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  Widget renderHeaderItem(Store store) {
+  Widget renderHeaderItem(Store store, BuildContext context) {
     bool isLogin = store.state.isLogin ?? false;
     UserData userModel = store.state.userData ?? UserData();
     UserInfo userInfo = userModel.userinfo ?? UserInfo();
@@ -247,7 +231,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: ColorStyles.blackColor(store.state.isNightModal),
                         fontWeight: FontWeight.bold)),
                 SizedBox(height: 3),
-                Text(petModel.age ?? '',
+                Text(petModel.birthday ?? '',
                     maxLines: 2,
                     style: TextStyle(
                         fontSize: 13,
@@ -356,10 +340,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void showLogoutDialog(BuildContext context, Store store) {
-    showAlertDialog(context);
-  }
-
-  showAlertDialog(context) {
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -369,8 +349,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Widget logoutButton = FlatButton(
       child: Text("Logout"),
       onPressed: () {
+        // FunctionUtils.logOutAction(context);
+        print("Loging out");
         Navigator.of(context, rootNavigator: true).pop('AlertDialog');
-        FunctionUtils.logOutAction(context);
+        context.read<AuthenticationService>().signOut();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MyApp()),

@@ -1,0 +1,60 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:petcare/models/pet_services_model.dart';
+import 'package:petcare/widgets/app_size.dart';
+import 'package:petcare/widgets/commons.dart';
+import 'package:petcare/widgets/custom_text.dart';
+
+List<PetServices> petServicesList = [
+  PetServices(name: "Health", image: "health_pet.png"),
+  PetServices(name: "Grooming", image: "grooming.png"),
+  PetServices(name: "Flea treat", image: "bug.png"),
+  PetServices(name: "Pet Sitting", image: "pet_sitting.png"),
+  PetServices(name: "Nutrition", image: "feed.png"),
+  PetServices(name: "Stores", image: "store.png"),
+  PetServices(name: "Contact", image: "contact.png"),
+];
+
+class PetServicesList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeFit.screenHeight / 6,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: petServicesList.length,
+        itemBuilder: (_, index) {
+          return Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: Colors.transparent,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.asset(
+                          'assets/images/${petServicesList[index].image}'),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                CustomText(
+                  text: petServicesList[index].name,
+                  size: 14,
+                  color: ColorStyles.black,
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

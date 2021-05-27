@@ -1,91 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:petcare/caches/shared_storage.dart';
-import 'package:petcare/redux/redux_state.dart';
-import 'package:petcare/screens/basic_screen/basic_screen.dart';
+import 'package:petcare/screens/splash_screen/splash_screen.dart';
+import 'package:petcare/services/authentication_service.dart';
+import 'package:petcare/widgets/app_size.dart';
+import 'package:provider/provider.dart';
 
 //fake users
-const users = const {
-  'anhwtuan': '12345678',
-  'asdfghjkl': 'qwertyuiop',
-};
 
 class LoginScreen extends StatelessWidget {
   static const routerName = '/login';
-  Duration get loginTime => Duration(milliseconds: 2250);
-  Future<String> _authUser(LoginData data) {
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(data.name)) {
-        return 'Username not exists';
-      }
-      if (users[data.name] != data.password) {
-        return 'Password does not match';
-      }
-      //for tesing
-      return null;
-    });
-  }
-
-  Future<String> _recoverPassword(String username) {
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(username)) {
-        return 'Username not exists';
-      }
-      return null;
-    });
-  }
-
+  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+  final TextEditingController usernameController = new TextEditingController();
+  final TextEditingController passwordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<ReduxState>(
-      builder: (context, store) {
-        return FlutterLogin(
-          title: 'Pet Care',
-          logo: 'assets/images/heart_paw.png',
-          onLogin: _authUser,
-          onSignup: _authUser,
-          loginProviders: <LoginProvider>[
-            LoginProvider(
-              icon: FontAwesomeIcons.google,
-              callback: () async {
-                await Future.delayed(loginTime);
-                return;
-              },
+    return Scaffold(
+      body: Center(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(36.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 120.0,
+                  child: Image.asset(
+                    "assets/images/pet_health.png",
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(height: 45.0),
+                TextField(
+                  controller: usernameController,
+                  obscureText: false,
+                  style: style,
+                  decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                      hintText: "Username or email",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32.0))),
+                ),
+                SizedBox(height: 25.0),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  style: style,
+                  decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                      hintText: "Password",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32.0))),
+                ),
+                SizedBox(
+                  height: 25.0,
+                ),
+                Material(
+                  elevation: 5.0,
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: Color(0xff01A0C7),
+                  child: MaterialButton(
+                    minWidth: SizeFit.screenWidth,
+                    padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    onPressed: () {
+                      context.read<AuthenticationService>().signIn(
+                            email: usernameController.text.trim(),
+                            password: passwordController.text.trim(),
+                          );
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => SplashScreen(),
+                        ),
+                      );
+                    },
+                    child: Text("Login",
+                        textAlign: TextAlign.center,
+                        style: style.copyWith(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+              ],
             ),
-            LoginProvider(
-              icon: FontAwesomeIcons.facebookF,
-              callback: () async {
-                await Future.delayed(loginTime);
-                return;
-              },
-            ),
-            LoginProvider(
-              icon: FontAwesomeIcons.linkedinIn,
-              callback: () async {
-                await Future.delayed(loginTime);
-                return;
-              },
-            ),
-            LoginProvider(
-              icon: FontAwesomeIcons.githubAlt,
-              callback: () async {
-                await Future.delayed(loginTime);
-                return;
-              },
-            ),
-          ],
-          //onSignup: _authUser,
-          onSubmitAnimationCompleted: () {
-            SharedStorage.saveLogin();
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => BasicScreen(),
-            ));
-          },
-          onRecoverPassword: _recoverPassword,
-        );
-      },
+          ),
+        ),
+      ),
     );
   }
 }

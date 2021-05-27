@@ -1,9 +1,8 @@
-import 'package:petcare/config/http_refresh/view_list_refresh.dart';
 import 'package:petcare/models/post_model.dart';
 
 import 'home_page_request.dart';
 
-class PostsProvider extends ViewListRefresh {
+class PostsProvider {
   List<PostModel> _postArray = [];
 
   List<PostModel> get postArray => _postArray;
@@ -20,12 +19,5 @@ class PostsProvider extends ViewListRefresh {
   Future<List<PostModel>> loadData({int pageIndex}) async {
     var result = await FindRequest.requestPostList(pageIndex);
     return result;
-  }
-
-  void reloadList(PostModel model) {
-    List<dynamic> newModels =
-        list.where((element) => element.userId != model.userId).toList();
-    list = newModels;
-    notifyListeners();
   }
 }

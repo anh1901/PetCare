@@ -7,7 +7,6 @@ import 'package:petcare/caches/shared_storage.dart';
 import 'package:petcare/caches/shared_util.dart';
 import 'package:petcare/config/common_config.dart';
 import 'package:petcare/models/login_info_model.dart';
-import 'package:petcare/models/pet_view_model.dart';
 import 'package:petcare/models/user_provider.dart';
 import 'package:petcare/redux/models/pet_model.dart';
 import 'package:petcare/redux/reducer/locale_reducer.dart';
@@ -43,8 +42,6 @@ class FunctionUtils {
     LoginInfo loginInfo = userModel.loginInfo;
     loginInfo.userId = 0;
     userModel.loginInfo = loginInfo;
-    PetViewModel petVM = Provider.of<PetViewModel>(context, listen: false);
-    petVM.petList = [];
     Toast.showSuccess('Success!');
     RouteUtil.popRoot(context);
   }

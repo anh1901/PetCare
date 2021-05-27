@@ -6,7 +6,6 @@ import 'package:petcare/screens/welcome_screen/welcome_screen.dart';
 class RouteUtil {
   static final String welcomeRoute = WelcomeScreen.routerName;
   static final String splashRoute = SplashScreen.routerName;
-  // static final String initialRoute = MainPage.routerName;
   static final Map<String, WidgetBuilder> routeList = {
     WelcomeScreen.routerName: (ctx) => WelcomeScreen(),
     SplashScreen.routerName: (ctx) => SplashScreen(),
@@ -14,12 +13,6 @@ class RouteUtil {
   };
 
   static final RouteFactory generateRoute = (setting) {
-    // if (setting.name == FilterScreen.routeName) {
-    //   return MaterialPageRoute(
-    //     builder: (context) => FilterScreen(),
-    //     fullscreenDialog: true
-    //   );
-    // }
     return null;
   };
   static final RouteFactory unknownRoute = (setting) {
