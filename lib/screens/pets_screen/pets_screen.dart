@@ -56,7 +56,7 @@ class _PetsScreenState extends State<PetsScreen> {
                 ],
               ),
               SizedBox(
-                height: 10,
+                height: 5,
               ),
               PetServicesList(),
               SizedBox(

@@ -10,7 +10,7 @@ class PostList {
   factory PostList.fromJson(Map<String, dynamic> parsedJson) {
     var list = parsedJson['posts'] as List;
     List<PostModel> postList = list.map((i) => PostModel.fromJson(i)).toList();
-    print(postList);
+    // print(postList);
     return new PostList(
       postList: postList,
     );

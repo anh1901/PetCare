@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final firebaseUser = context.watch<User>();
     print("User $firebaseUser");
     Timer(
-      Duration(seconds: 7),
+      Duration(seconds: 4),
       () => {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

@@ -19,7 +19,7 @@ class PetServicesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeFit.screenHeight / 6,
+      height: SizeFit.screenHeight / 5,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: petServicesList.length,

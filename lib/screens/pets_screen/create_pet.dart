@@ -3,15 +3,18 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cupertino_radio_choice/cupertino_radio_choice.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:petcare/redux/models/pet_model.dart';
+import 'package:petcare/models/pet_model.dart';
 import 'package:petcare/widgets/app_size.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/custom_text.dart';
+import 'package:petcare/widgets/toast.dart';
 import 'package:video_player/video_player.dart';
 
 List<String> types = ["Dog", "Cat", "Rabbit", "Bird"];
@@ -19,6 +22,9 @@ final Map<String, String> genderMap = {
   'Male': 'Male',
   'Female': 'Female',
 };
+final FirebaseAuth auth = FirebaseAuth.instance;
+final User user = auth.currentUser;
+final uid = user.uid;
 
 class CreatePetScreen extends StatefulWidget {
   const CreatePetScreen({Key key}) : super(key: key);
@@ -29,19 +35,21 @@ class CreatePetScreen extends StatefulWidget {
 
 class _CreatePetScreenState extends State<CreatePetScreen> {
   File image;
+  String fileName;
   PickedFile _imageFile;
+  String uploadUrl;
   dynamic _pickImageError;
   bool isVideo = false;
-
-  final ImagePicker _picker = ImagePicker();
-  final TextEditingController maxWidthController = TextEditingController();
-  final TextEditingController maxHeightController = TextEditingController();
-  final TextEditingController qualityController = TextEditingController();
-
   String _selectedType;
   String _selectedGender = genderMap.keys.first;
   String petName, petBreed, description, birthday;
   double weight;
+  final ImagePicker _picker = ImagePicker();
+  final TextEditingController maxWidthController = TextEditingController();
+  final TextEditingController maxHeightController = TextEditingController();
+  final TextEditingController qualityController = TextEditingController();
+  FirebaseStorage storage = FirebaseStorage.instance;
+
   void onGenderSelected(String genderKey) {
     setState(() {
       _selectedGender = genderKey;
@@ -65,12 +73,9 @@ class _CreatePetScreenState extends State<CreatePetScreen> {
   }
 
   createPet() {
-    final moviesRef = FirebaseFirestore.instance
-        .collection('users')
-        .withConverter<PetModel>(
-          fromFirestore: (snapshots, _) => PetModel.fromJson(snapshots.data()),
-          toFirestore: (pet, _) => pet.toJson(),
-        );
+    addPet();
+    Toast.showSuccess('Successfully add new pet');
+    Navigator.of(context).pop();
   }
 
   @override
@@ -93,310 +98,335 @@ class _CreatePetScreenState extends State<CreatePetScreen> {
       direction: DismissDirection.down,
       onDismissed: (_) => Navigator.pop(context),
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Color(0xFDDAE4E7),
-          body: Scaffold(
-            body: SafeArea(
-              child: ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15, top: 50),
-                    child: CustomText(
-                      text: "Add new pet",
-                      size: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: CustomText(
-                      text: "Having a new member in your family?",
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: SizeFit.screenHeight / 6,
-                            width: SizeFit.screenWidth,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/images/background.png"),
-                                  fit: BoxFit.none,
-                                ),
-                                borderRadius: BorderRadius.circular(30),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.blue[50],
-                                    offset: Offset(4, 6),
-                                    blurRadius: 20,
-                                  ),
-                                ]),
-                            padding: EdgeInsets.only(top: 8),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xFDDAE4E7),
+        body: SafeArea(
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 15, top: 50),
+                child: CustomText(
+                  text: "Add new pet",
+                  size: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: CustomText(
+                  text: "Having a new member in your family?",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: SizeFit.screenHeight / 5.5,
+                        width: SizeFit.screenWidth,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/images/background.png"),
+                              fit: BoxFit.none,
+                            ),
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue[50],
+                                offset: Offset(4, 6),
+                                blurRadius: 20,
+                              ),
+                            ]),
+                        padding: EdgeInsets.only(top: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
                                 children: [
-                                  Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          _onImageButtonPressed(
-                                              ImageSource.gallery,
-                                              context: context);
-                                        },
-                                        child: Image.asset(
-                                          "assets/images/gallery.png",
-                                          width: 80,
-                                          height: 80,
-                                        ),
-                                      ),
-                                      CustomText(
-                                          text: "From gallery", size: 20),
-                                    ],
+                                  GestureDetector(
+                                    onTap: () {
+                                      _onImageButtonPressed(ImageSource.gallery,
+                                          context: context);
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/gallery.png",
+                                      width: 80,
+                                      height: 80,
+                                    ),
                                   ),
-                                  Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          _onImageButtonPressed(
-                                              ImageSource.camera,
-                                              context: context);
-                                        },
-                                        child: Image.asset(
-                                          "assets/images/camera.png",
-                                          width: 80,
-                                          height: 80,
-                                        ),
-                                      ),
-                                      CustomText(
-                                          text: "Take a picture", size: 20),
-                                    ],
-                                  ),
+                                  CustomText(text: "From gallery", size: 20),
                                 ],
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: _imageFile != null
-                        ? Row(
-                            children: [
-                              SizedBox(
-                                  height: 100,
-                                  width: 100,
-                                  child: Image.file(image)),
-                              SizedBox(
-                                  height: 100,
-                                  width: SizeFit.screenWidth * 0.7,
-                                  child: CustomText(
-                                      text: "Chosen an image from $image")),
+                              Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      _onImageButtonPressed(ImageSource.camera,
+                                          context: context);
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/camera.png",
+                                      width: 80,
+                                      height: 80,
+                                    ),
+                                  ),
+                                  CustomText(text: "Take a picture", size: 20),
+                                ],
+                              ),
                             ],
-                          )
-                        : CustomText(text: "No pet image."),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                      text: "Pet name",
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Name",
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 2.0),
-                        ),
-                      ),
-                      onChanged: (String name) {
-                        getPetName(name);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                      text: "Types of pet",
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownButton(
-                      isExpanded: true,
-                      hint: Text('Please choose a type of pet'),
-                      value: _selectedType,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedType = newValue;
-                        });
-                      },
-                      items: types.map((location) {
-                        return DropdownMenuItem(
-                          child: new Text(location),
-                          value: location,
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                      text: "Breed",
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Breed",
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 2.0),
-                        ),
-                      ),
-                      onChanged: (String breed) {
-                        getBreed(breed);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                      text: "Weight",
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Weight",
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 2.0),
-                        ),
-                      ),
-                      onChanged: (String weight) {
-                        getPetWeight(weight);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                      text: "Description",
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Description",
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 2.0),
-                        ),
-                      ),
-                      onChanged: (String description) {
-                        getPetDescription(description);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                      text: "Birthday/Adoption Day",
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 200,
-                      child: CupertinoDatePicker(
-                        mode: CupertinoDatePickerMode.date,
-                        initialDateTime: DateTime(1969, 1, 1),
-                        onDateTimeChanged: (DateTime newDateTime) {
-                          birthday =
-                              DateFormat('yyyy-MM-dd').format(newDateTime);
-                        },
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                      text: "Gender",
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CupertinoRadioChoice(
-                            choices: genderMap,
-                            onChange: onGenderSelected,
-                            initialKeyValue: _selectedGender,
-                            selectedColor: Colors.lightBlueAccent,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: ColorStyles.main_color,
-                      child: MaterialButton(
-                        minWidth: SizeFit.screenWidth,
-                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        onPressed: () {
-                          createPet();
-                        },
-                        child: CustomText(
-                            text: "Add pet",
-                            size: 24,
-                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: _imageFile != null
+                    ? Row(
+                        children: [
+                          SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: Image.file(image)),
+                          SizedBox(
+                              height: 100,
+                              width: SizeFit.screenWidth * 0.7,
+                              child: CustomText(
+                                  text: "Chosen an image from $image")),
+                        ],
+                      )
+                    : CustomText(text: "No pet image."),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomText(
+                  text: "Pet name",
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Name",
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    ),
+                  ),
+                  onChanged: (String name) {
+                    getPetName(name);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomText(
+                  text: "Types of pet",
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownButton(
+                  isExpanded: true,
+                  hint: Text('Please choose a type of pet'),
+                  value: _selectedType,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedType = newValue;
+                    });
+                  },
+                  items: types.map((location) {
+                    return DropdownMenuItem(
+                      child: new Text(location),
+                      value: location,
+                    );
+                  }).toList(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomText(
+                  text: "Breed",
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Breed",
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    ),
+                  ),
+                  onChanged: (String breed) {
+                    getBreed(breed);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomText(
+                  text: "Weight",
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Weight",
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    ),
+                  ),
+                  onChanged: (String weight) {
+                    getPetWeight(weight);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomText(
+                  text: "Description",
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Description",
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    ),
+                  ),
+                  onChanged: (String description) {
+                    getPetDescription(description);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomText(
+                  text: "Birthday/Adoption Day",
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 200,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: DateTime(1969, 1, 1),
+                    onDateTimeChanged: (DateTime newDateTime) {
+                      birthday = DateFormat('yyyy-MM-dd').format(newDateTime);
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomText(
+                  text: "Gender",
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CupertinoRadioChoice(
+                        choices: genderMap,
+                        onChange: onGenderSelected,
+                        initialKeyValue: _selectedGender,
+                        selectedColor: Colors.lightBlueAccent,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Material(
+                  elevation: 5.0,
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: ColorStyles.main_color,
+                  child: MaterialButton(
+                    minWidth: SizeFit.screenWidth,
+                    padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    onPressed: () {
+                      createPet();
+                    },
+                    child: CustomText(
+                        text: "Add pet", size: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  final petRef = FirebaseFirestore.instance
+      .collection('users/$uid/pets')
+      .withConverter<PetModel>(
+        fromFirestore: (snapshot, _) => PetModel.fromJson(snapshot.data()),
+        toFirestore: (movie, _) => movie.toJson(),
+      );
+  Future<void> _upload() async {
+    try {
+      await storage.ref(fileName).putFile(
+          image,
+          SettableMetadata(customMetadata: {
+            'uploaded_by': uid,
+            'description': 'Upload by $uid'
+          }));
+      setState(() {});
+      uploadUrl = storage.ref(fileName).getDownloadURL() as String;
+    } on FirebaseException catch (error) {}
+  }
+
+  Future<void> addPet() async {
+    //upload image
+
+    _upload();
+    print(uploadUrl);
+    // Add a pet
+    await petRef.add(
+      PetModel(
+        petImg: uploadUrl,
+        petName: petName,
+        petBreed: petBreed,
+        sex: _selectedGender,
+        birthday: birthday,
+        petWeight: weight.toString(),
+        type: _selectedType,
+        description: description,
+      ),
     );
   }
 
@@ -412,6 +442,7 @@ class _CreatePetScreenState extends State<CreatePetScreen> {
         );
         setState(() {
           _imageFile = pickedFile;
+          fileName = _imageFile.path.split('/').last;
           image = File(pickedFile.path);
         });
       } catch (e) {

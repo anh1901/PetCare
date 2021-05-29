@@ -1,60 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:petcare/caches/shared_constant.dart';
-import 'package:petcare/caches/shared_storage.dart';
 import 'package:petcare/caches/shared_util.dart';
 import 'package:petcare/config/common_config.dart';
-import 'package:petcare/models/login_info_model.dart';
-import 'package:petcare/models/user_provider.dart';
-import 'package:petcare/redux/models/pet_model.dart';
 import 'package:petcare/redux/reducer/locale_reducer.dart';
-import 'package:petcare/redux/reducer/login_reducer.dart';
 import 'package:petcare/redux/reducer/theme_reducer.dart';
-import 'package:petcare/redux/reducer/user_reducer.dart';
-import 'package:petcare/redux/redux_index.dart';
-import 'package:petcare/screens/splash_screen/splash_screen.dart';
 import 'package:petcare/widgets/app_theme.dart';
-import 'package:petcare/widgets/toast.dart';
-import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
-
-import 'route_util.dart';
 
 class FunctionUtils {
   static Locale curLocale;
-
-  static bool isLogin() {
-    LoginInfo loginInfo = SharedStorage.loginInfo;
-    if (loginInfo.userId != null && loginInfo.userId > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  static void jumpLogin(BuildContext context) {
-    Navigator.of(context).pushNamed(SplashScreen.routerName, arguments: '/');
-  }
-
-  static void loginOut(BuildContext context) {
-    UserProvider userModel = Provider.of<UserProvider>(context, listen: false);
-    LoginInfo loginInfo = userModel.loginInfo;
-    loginInfo.userId = 0;
-    userModel.loginInfo = loginInfo;
-    Toast.showSuccess('Success!');
-    RouteUtil.popRoot(context);
-  }
-
-  static void logOutAction(BuildContext context) {
-    Store<ReduxState> store = StoreProvider.of(context);
-    store.dispatch(LogoutAction(context));
-    store.dispatch(LoginStatusAction(false));
-    store.dispatch(UpdatePetList([]));
-    store.dispatch(UpdateCurrentPet(PetModel()));
-    Toast.showSuccess('Success!');
-  }
-
   static setThemeData(Store store, int index) {
     ThemeData themeData = getThemeData(index);
     store.dispatch(RefreshThemeDataAction(themeData));

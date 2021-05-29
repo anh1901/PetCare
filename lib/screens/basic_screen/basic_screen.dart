@@ -6,7 +6,7 @@ import '../aboutus_screen/Aboutus_screen.dart';
 import '../main_screen.dart';
 
 class BasicScreen extends StatelessWidget {
-  static final String routerName = 'basic';
+  static final String routerName = '/';
   @override
   Widget build(BuildContext context) {
     return AnimatedDrawer(

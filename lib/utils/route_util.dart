@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcare/screens/basic_screen/basic_screen.dart';
 import 'package:petcare/screens/login_screen/login_screen.dart';
 import 'package:petcare/screens/splash_screen/splash_screen.dart';
 import 'package:petcare/screens/welcome_screen/welcome_screen.dart';
@@ -10,6 +11,7 @@ class RouteUtil {
     WelcomeScreen.routerName: (ctx) => WelcomeScreen(),
     SplashScreen.routerName: (ctx) => SplashScreen(),
     LoginScreen.routerName: (ctx) => LoginScreen(),
+    BasicScreen.routerName: (ctx) => BasicScreen(),
   };
 
   static final RouteFactory generateRoute = (setting) {

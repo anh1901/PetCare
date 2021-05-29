@@ -4,9 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:petcare/caches/shared_constant.dart';
 import 'package:petcare/caches/shared_util.dart';
 import 'package:petcare/main.dart';
-import 'package:petcare/models/post_model.dart';
-import 'package:petcare/models/user_data_model.dart';
-import 'package:petcare/redux/models/pet_model.dart';
+import 'package:petcare/models/pet_model.dart';
 import 'package:petcare/redux/redux_state.dart';
 import 'package:petcare/services/authentication_service.dart';
 import 'package:petcare/utils/function_util.dart';
@@ -26,53 +24,52 @@ class ProfileScreen extends StatelessWidget {
       RefreshController(initialRefresh: false);
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<ReduxState>(builder: (context, store) {
-      final isLogin = store.state.isLogin ?? false;
-      return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(AppLocalizations.of(context).profile),
-          centerTitle: true,
-        ),
-        body: Container(
-          color: ColorStyles.marginColor(store.state.isNightModal),
-          child: SmartRefresher(
-            controller: _refreshController,
-            enablePullDown: true,
-            enablePullUp: false,
-            onRefresh: () {
-              if (!isLogin) {
-                _refreshController.refreshCompleted();
-                return;
-              }
-              ;
-            },
-            child: CustomScrollView(
-              slivers: [
-                renderHeaderItem(store, context),
-                renderAnimalTitle(store),
-                renderAnimalList(store),
-                renderProfileList(context, store)
-              ],
+    return StoreBuilder<ReduxState>(
+      builder: (context, store) {
+        final isLogin = store.state.isLogin ?? false;
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            title: Text(AppLocalizations.of(context).profile),
+            centerTitle: true,
+          ),
+          body: Container(
+            color: ColorStyles.marginColor(store.state.isNightModal),
+            child: SmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              enablePullUp: false,
+              onRefresh: () {
+                if (!isLogin) {
+                  _refreshController.refreshCompleted();
+                  return;
+                }
+              },
+              child: CustomScrollView(
+                slivers: [
+                  renderHeaderItem(store, context),
+                  renderAnimalTitle(store),
+                  renderAnimalList(store),
+                  renderProfileList(context, store)
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget renderHeaderItem(Store store, BuildContext context) {
     bool isLogin = store.state.isLogin ?? false;
-    UserData userModel = store.state.userData ?? UserData();
-    UserInfo userInfo = userModel.userinfo ?? UserInfo();
-    String headerImg = isLogin ? userInfo.avatarImg ?? '' : '';
-    String nickName = isLogin ? userInfo.nickname ?? '' : 'Nick Name';
-    String userIntro = isLogin ? userInfo.nickname ?? '' : 'Dog lover'; //intro
+    String headerImg = '';
+    String nickName = 'Nick Name';
+    String userIntro = 'Dog lover';
     return SliverToBoxAdapter(
       child: Stack(
         children: [
           Container(
-            width: 250.w,
+            width: 90.w,
             height: SizeFit.screenHeight / 6,
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
@@ -350,7 +347,6 @@ class ProfileScreen extends StatelessWidget {
       child: Text("Logout"),
       onPressed: () {
         // FunctionUtils.logOutAction(context);
-        print("Loging out");
         Navigator.of(context, rootNavigator: true).pop('AlertDialog');
         context.read<AuthenticationService>().signOut();
         Navigator.pushReplacement(

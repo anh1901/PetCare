@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:petcare/redux/models/pet_model.dart';
+import 'package:petcare/models/pet_model.dart';
 import 'package:petcare/widgets/app_size.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/custom_text.dart';

@@ -12,7 +12,7 @@ class PostsProvider {
       PostModel model = e;
       return model;
     }).toList();
-    print(_postArray);
+    // print(_postArray);
   }
 
   @override

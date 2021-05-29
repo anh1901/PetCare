@@ -8,25 +8,25 @@ import 'package:petcare/screens/shopping_screen/shopping_screen.dart';
 import 'package:redux/redux.dart';
 
 final List<Widget> pageList = [
+  PetsScreen(),
   HomeScreen(),
   ShoppingScreen(),
-  PetsScreen(),
   NotificationsScreen(),
   ProfileScreen(),
 ];
 List<BottomNavigationBarItem> itemList(Store store) {
   return [
     BottomNavigationBarItem(
+      icon: Icon(Icons.pets),
+      label: "Pets",
+    ),
+    BottomNavigationBarItem(
       icon: Icon(Icons.home),
-      label: "Home",
+      label: "Network",
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.shopping_cart),
       label: "Shopping",
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.pets),
-      label: "Pets",
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.notifications),

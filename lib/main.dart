@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,19 +6,35 @@ import 'package:petcare/redux_app.dart';
 import 'package:petcare/services/authentication_service.dart';
 import 'package:petcare/utils/orientation_util.dart';
 import 'package:petcare/widgets/app_size.dart';
+import 'package:petcare/widgets/toast.dart';
 import 'package:provider/provider.dart';
 
 import 'caches/shared_storage.dart';
 import 'config/device_info.dart';
-import 'widgets/toast.dart';
 
-Future<void> main() async {
+bool USE_FIRESTORE_EMULATOR = false;
+//
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   SharedStorage.initStorage().then((value) {
+//     runApp(MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
+//     Toast.setToastStyle();
+//   }).catchError((error) {
+//     print(error);
+//   });
+// }
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  if (USE_FIRESTORE_EMULATOR) {
+    FirebaseFirestore.instance.settings = Settings(
+        host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
+  }
+  await FirebaseAuth.instance.useEmulator('http://localhost:9099');
   SharedStorage.initStorage().then((value) {
     runApp(MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
     Toast.setToastStyle();
-  }).catchError((error) {
-    print(error);
   });
 }
 
@@ -41,7 +58,7 @@ class MyApp extends StatelessWidget with PortraitModeMixin {
         future: _fbApp,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            print("${snapshot.error.toString()}");
+            // print("${snapshot.error.toString()}");
           } else if (snapshot.hasData) {
             return ReduxApp();
           } else {
