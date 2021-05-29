@@ -405,16 +405,14 @@ class _CreatePetScreenState extends State<CreatePetScreen> {
             'uploaded_by': uid,
             'description': 'Upload by $uid'
           }));
-      setState(() {});
-      uploadUrl = storage.ref(fileName).getDownloadURL() as String;
+      uploadUrl = await storage.ref(fileName).getDownloadURL();
+      // setState(() {});
     } on FirebaseException catch (error) {}
   }
 
   Future<void> addPet() async {
     //upload image
-
-    _upload();
-    print(uploadUrl);
+    await _upload();
     // Add a pet
     await petRef.add(
       PetModel(

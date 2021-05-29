@@ -201,6 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> logInUser(email, password) async {
     String userId = await Auth.signIn(email, password);
+    await Auth.checkUserExist(userId);
     UserModel user = (await Auth.getUserFirestore(userId));
     await Auth.storeUserLocal(user);
   }
