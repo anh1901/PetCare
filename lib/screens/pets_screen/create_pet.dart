@@ -395,7 +395,7 @@ class _CreatePetScreenState extends State<CreatePetScreen> {
       .collection('users/$uid/pets')
       .withConverter<PetModel>(
         fromFirestore: (snapshot, _) => PetModel.fromJson(snapshot.data()),
-        toFirestore: (movie, _) => movie.toJson(),
+        toFirestore: (pet, _) => pet.toJson(),
       );
   Future<void> _upload() async {
     try {
