@@ -15,7 +15,6 @@ import 'package:petcare/widgets/commons.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
-import 'package:sizer/sizer.dart';
 
 import 'components/detail_page.dart';
 
@@ -69,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            width: 90.w,
+            width: 1000,
             height: SizeFit.screenHeight / 6,
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(

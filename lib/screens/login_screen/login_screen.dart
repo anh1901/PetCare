@@ -6,6 +6,7 @@ import 'package:petcare/screens/basic_screen/basic_screen.dart';
 import 'package:petcare/screens/login_screen/components/auth.dart';
 import 'package:petcare/services/validator.dart';
 
+import 'components/google_signin_button.dart';
 import 'components/loading.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -149,6 +150,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       password,
                       SizedBox(height: 12.0),
                       loginButton,
+                      FutureBuilder(
+                        future: Auth.initializeFirebase(context),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Error initializing Firebase');
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return GoogleSignInButton();
+                          }
+                          return CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.lightBlueAccent,
+                            ),
+                          );
+                        },
+                      ),
                       forgotLabel,
                       signUpLabel,
                       skipLabel,

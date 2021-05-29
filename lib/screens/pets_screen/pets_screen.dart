@@ -30,7 +30,6 @@ class _PetsScreenState extends State<PetsScreen> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder<ReduxState>(builder: (context, store) {
-      final isLogin = store.state.isLogin ?? false;
       return Scaffold(
         body: SafeArea(
           child: ListView(

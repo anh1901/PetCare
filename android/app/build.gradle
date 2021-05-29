@@ -57,9 +57,10 @@ flutter {
 }
 
 dependencies {
-//    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta01'
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta01'
     implementation platform('com.google.firebase:firebase-bom:28.0.1')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
 }

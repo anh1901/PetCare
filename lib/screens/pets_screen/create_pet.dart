@@ -24,7 +24,7 @@ final Map<String, String> genderMap = {
 };
 final FirebaseAuth auth = FirebaseAuth.instance;
 final User user = auth.currentUser;
-final uid = user.uid;
+final uid = (user == null) ? "YA0MCREEIsG4U8bUtyXQ" : user.uid;
 
 class CreatePetScreen extends StatefulWidget {
   const CreatePetScreen({Key key}) : super(key: key);
@@ -89,6 +89,11 @@ class _CreatePetScreenState extends State<CreatePetScreen> {
     maxHeightController.dispose();
     qualityController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
