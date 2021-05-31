@@ -123,11 +123,28 @@ class Auth {
     }
   }
 
-  static Future<String> signIn(String email, String password) async {
-    UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
+  static Future<String> signIn(
+      String email, String password, BuildContext context) async {
+    UserCredential userCredential;
+    try {
+      userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          Auth.customSnackBar(
+            'User not found for this email',
+          ),
+        );
+      } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          Auth.customSnackBar(
+            'Wrong password. Try again.',
+          ),
+        );
+      }
+    }
     User user = userCredential.user;
-    print(user.uid);
     return user.uid;
   }
 
@@ -139,7 +156,7 @@ class Auth {
           .get()
           .then((documentSnapshot) => UserModel.fromDocument(documentSnapshot));
     } else {
-      print('firestore userId can not be null');
+      print('Firestore userId can not be null');
       return null;
     }
   }

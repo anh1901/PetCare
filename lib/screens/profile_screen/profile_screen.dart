@@ -62,7 +62,7 @@ class ProfileScreen extends StatelessWidget {
   Widget renderHeaderItem(Store store, BuildContext context) {
     bool isLogin = store.state.isLogin ?? false;
     String headerImg = '';
-    String nickName = 'Nick Name';
+    String nickName = 'Anhwtuan';
     String userIntro = 'Dog lover';
     return SliverToBoxAdapter(
       child: Stack(

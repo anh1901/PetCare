@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:petcare/redux/redux_state.dart';
 import 'package:petcare/screens/pets_screen/components/pet_services.dart';
-import 'package:petcare/screens/pets_screen/create_pet.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/custom_text.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -11,6 +10,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'components/pet_appointment.dart';
 import 'components/pet_list.dart';
 import 'components/pet_screen_title.dart';
+import 'create_pet.dart';
 
 class PetsScreen extends StatefulWidget {
   const PetsScreen({Key key}) : super(key: key);

@@ -191,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         SystemChannels.textInput.invokeMethod('TextInput.hide');
         await _changeLoadingVisible();
-        await logInUser(email, password);
+        await logInUser(email, password, context);
         await Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (BuildContext context) => BasicScreen(),
@@ -216,9 +216,9 @@ class _LoginScreenState extends State<LoginScreen> {
     await Auth.signOut();
   }
 
-  Future<void> logInUser(email, password) async {
-    String userId = await Auth.signIn(email, password);
-    await Auth.checkUserExist(userId);
+  Future<void> logInUser(email, password, context) async {
+    String userId = await Auth.signIn(email, password, context);
+    //await Auth.checkUserExist(userId);
     UserModel user = (await Auth.getUserFirestore(userId));
     await Auth.storeUserLocal(user);
   }
