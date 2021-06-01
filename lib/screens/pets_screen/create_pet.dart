@@ -28,7 +28,6 @@ final uid = (user == null) ? "YA0MCREEIsG4U8bUtyXQ" : user.uid;
 
 class CreatePetScreen extends StatefulWidget {
   const CreatePetScreen({Key key}) : super(key: key);
-
   @override
   _CreatePetScreenState createState() => _CreatePetScreenState();
 }

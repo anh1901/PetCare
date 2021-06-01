@@ -44,7 +44,7 @@ class PetList extends StatelessWidget {
                 if (snapshot.data.length == 0) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: CustomText(text: "you have no pet."),
+                    child: CustomText(text: "You have no pet."),
                   );
                 } else {
                   return Padding(

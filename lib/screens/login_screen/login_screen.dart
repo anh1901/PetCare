@@ -1,7 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:petcare/models/user.dart';
 import 'package:petcare/screens/basic_screen/basic_screen.dart';
 import 'package:petcare/screens/login_screen/components/auth.dart';
 import 'package:petcare/services/validator.dart';
@@ -219,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> logInUser(email, password, context) async {
     String userId = await Auth.signIn(email, password, context);
     //await Auth.checkUserExist(userId);
-    UserModel user = (await Auth.getUserFirestore(userId));
-    await Auth.storeUserLocal(user);
+    // UserModel user = (await Auth.getUserFirestore(userId));
+    // await Auth.storeUserLocal(user);
   }
 }

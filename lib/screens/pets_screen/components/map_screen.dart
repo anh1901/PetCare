@@ -1,14 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:petcare/models/store_model.dart';
 import 'package:petcare/widgets/app_size.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/custom_text.dart';
 
 import 'book_service_screen.dart';
+
+final FirebaseAuth auth = FirebaseAuth.instance;
+final User user = auth.currentUser;
+final uid = (user == null) ? "YA0MCREEIsG4U8bUtyXQ" : user.uid;
+final storeRef =
+    FirebaseFirestore.instance.collection('stores').withConverter<StoreModel>(
+          fromFirestore: (snapshot, _) => StoreModel.fromJson(snapshot.data()),
+          toFirestore: (store, _) => store.toJson(),
+        );
+Future getListStore() async {
+  QuerySnapshot storeList = (await storeRef.get());
+  return storeList.docs;
+}
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key key}) : super(key: key);
@@ -197,72 +213,110 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 50.0),
-                    child: ListView.separated(
-                      itemCount: 10,
-                      physics: ScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.white,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.network(""),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text('Store title'),
-                                    Container(
-                                      padding: EdgeInsets.only(top: 5.0),
-                                      child: Text('Location'),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: FutureBuilder(
+                        future: getListStore(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (_, index) {
+                                if (snapshot.data.length == 0) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CustomText(
+                                        text: "No store found in your area."),
+                                  );
+                                } else {
+                                  return Container(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor: Colors.white,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Image.network(snapshot
+                                                    .data[index]["imageUrl"]),
+                                              ),
+                                            ),
+                                            Container(
+                                              padding:
+                                                  EdgeInsets.only(left: 10.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(snapshot.data[index]
+                                                      ["storeName"]),
+                                                  Container(
+                                                    padding: EdgeInsets.only(
+                                                        top: 5.0),
+                                                    child: Text(
+                                                        snapshot.data[index]
+                                                            ["location"]),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          child: TextButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      ColorStyles.main_color),
+                                              foregroundColor:
+                                                  MaterialStateProperty.all<
+                                                      Color>(ColorStyles.white),
+                                            ),
+                                            onPressed: (true)
+                                                ? () {
+                                                    _currentStore = snapshot
+                                                        .data[index]["id"];
+                                                    Navigator.push(
+                                                        context,
+                                                        PageTransition(
+                                                            type:
+                                                                PageTransitionType
+                                                                    .bottomToTop,
+                                                            child: BookServiceScreen(
+                                                                currentAddress:
+                                                                    _currentAddress,
+                                                                currentStore:
+                                                                    _currentStore,
+                                                                storeName: snapshot
+                                                                            .data[
+                                                                        index][
+                                                                    "storeName"])));
+                                                  }
+                                                : null,
+                                            child: Text('Choose'),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            ColorStyles.main_color),
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            ColorStyles.white),
-                                  ),
-                                  onPressed: (true)
-                                      ? () {
-                                          _currentStore = "";
-                                          Navigator.push(
-                                              context,
-                                              PageTransition(
-                                                  type: PageTransitionType
-                                                      .bottomToTop,
-                                                  child: BookServiceScreen(
-                                                      _currentAddress,
-                                                      _currentStore)));
-                                        }
-                                      : null,
-                                  child: Text('Choose'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return Container();
-                      },
-                    ),
+                                  );
+                                }
+                              });
+                        }),
                   ),
                 ],
               ),

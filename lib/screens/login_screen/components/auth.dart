@@ -130,6 +130,7 @@ class Auth {
       userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
+      print(e.code);
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
           Auth.customSnackBar(
@@ -142,9 +143,16 @@ class Auth {
             'Wrong password. Try again.',
           ),
         );
+      } else if (e.code == 'network-request-failed') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          Auth.customSnackBar(
+            'Network request failed',
+          ),
+        );
       }
     }
     User user = userCredential.user;
+    print(user.uid);
     return user.uid;
   }
 
