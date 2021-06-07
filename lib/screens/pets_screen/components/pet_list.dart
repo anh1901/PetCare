@@ -52,11 +52,13 @@ class PetList extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         GestureDetector(
-                          onTap: () {}, //view pet detail
+                          onTap: () {
+                            //
+                          }, //view pet detail
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Container(
-                              width: SizeFit.screenWidth * 0.8,
+                              width: SizeFit.screenWidth * 0.7,
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(20),

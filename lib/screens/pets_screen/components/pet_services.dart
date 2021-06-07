@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:petcare/models/pet_services_model.dart';
 import 'package:petcare/widgets/app_size.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/custom_text.dart';
-
-import 'map_screen.dart';
 
 List<PetServices> petServicesList = [
   PetServices(name: "Health", image: "health_pet.png"),
@@ -22,18 +19,14 @@ class PetServicesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeFit.screenHeight / 5,
+      height: SizeFit.screenHeight / 6,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: petServicesList.length,
         itemBuilder: (_, index) {
           return GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.bottomToTop,
-                      child: MapScreen()));
+              //
             },
             child: Padding(
               padding: const EdgeInsets.all(5.0),

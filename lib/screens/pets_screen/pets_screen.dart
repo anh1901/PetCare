@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:petcare/redux/redux_state.dart';
+import 'package:petcare/screens/pets_screen/components/add_appointment/map_screen.dart';
 import 'package:petcare/screens/pets_screen/components/pet_services.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/custom_text.dart';
@@ -54,20 +55,14 @@ class _PetsScreenState extends State<PetsScreen> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 5,
-              ),
               PetServicesList(),
-              SizedBox(
-                height: 15,
-              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 12),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
+                      width: MediaQuery.of(context).size.width * 0.8,
                       child: CustomText(
                         text: "Pet's appointment",
                         size: 24,
@@ -75,12 +70,26 @@ class _PetsScreenState extends State<PetsScreen> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, right: 12),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.bottomToTop,
+                                child: MapScreen()));
+                      },
+                      child: Icon(
+                        Icons.add_circle,
+                        size: 40,
+                        color: ColorStyles.main_color,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               PetAppointment(),
-              SizedBox(
-                height: 15,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -110,9 +119,6 @@ class _PetsScreenState extends State<PetsScreen> {
                     ),
                   ),
                 ],
-              ),
-              SizedBox(
-                height: 15,
               ),
               PetList(),
             ],

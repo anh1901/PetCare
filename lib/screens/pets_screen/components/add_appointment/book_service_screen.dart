@@ -13,10 +13,12 @@ import 'package:petcare/widgets/app_size.dart';
 import 'package:petcare/widgets/commons.dart';
 import 'package:petcare/widgets/custom_text.dart';
 import 'package:petcare/widgets/size_config.dart';
+import 'package:petcare/widgets/toast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timer_builder/timer_builder.dart';
 
-import '../create_pet.dart';
+import '../../create_pet.dart';
+import 'checkout_screen.dart';
 
 final currency = new NumberFormat("#,##0", "vi_VN");
 final Map<String, String> serviceTypes = {
@@ -94,6 +96,15 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     setState(() {
       _timeout = timeout;
     });
+  }
+
+  bookService() {
+    //createBookService();
+    Toast.showSuccess('Check out.');
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.rightToLeft, child: CheckOutScreen()));
   }
 
   var today = new DateTime(
@@ -522,7 +533,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       minWidth: SizeFit.screenWidth,
                       padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                       onPressed: () {
-                        // bookService();
+                        bookService();
                       },
                       child: CustomText(
                           text: "Book Now",
