@@ -570,7 +570,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    height: 50.0,
+                    height: 40.0,
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.only(right: 50.0, left: 50.0),
                     decoration: BoxDecoration(
@@ -585,6 +585,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       ),
                     ),
                   ),
+                  Divider(),
                   Container(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -604,7 +605,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                                 itemBuilder: (_, index) {
                                   if (snapshot.data.length == 0) {
                                     return Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(5.0),
                                       child: CustomText(text: "No pet found."),
                                     );
                                   } else {
@@ -629,7 +630,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                                               ),
                                             ]),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
+                                          padding: const EdgeInsets.all(15.0),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,

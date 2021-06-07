@@ -19,7 +19,7 @@ class AboutUsScreen extends StatelessWidget {
       ),
       body: Center(
         child: Text(
-          'This is an about us screen',
+          'lorem ipsum dolor sit amet lorem ipsum dolor',
           style: TextStyle(fontSize: 24.0),
         ),
       ),

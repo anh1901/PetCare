@@ -70,6 +70,7 @@ dependencies:
   geolocator: ^7.0.3
   multi_select_flutter: ^4.0.0
   timer_builder: ^2.0.0
+  carousel_slider: ^3.0.0
 
 
 dev_dependencies:
