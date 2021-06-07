@@ -100,7 +100,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
 
   bookService() {
     //createBookService();
-    Toast.showSuccess('Check out.');
+    Toast.showSuccess('Info saved.');
     Navigator.push(
         context,
         PageTransition(
